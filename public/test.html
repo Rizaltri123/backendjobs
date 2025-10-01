@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Laravel API Token Test</title>
+    </head>
+    <body>
+        <button onclick="testApi()">Test API</button>
+
+        <pre id="result"></pre>
+
+        <script>
+            function testApi() {
+                fetch("http://127.0.0.1:8000/api/check", {
+                    headers: {
+                        "X-API-TOKEN":
+                            "3ef0fe1335b67cc2af6af7f64c21169d37d01fc464b38ee200fa4caabba0f042",
+                    },
+                })
+                    .then(async (res) => {
+                        const contentType = res.headers.get("content-type");
+                        if (
+                            contentType &&
+                            contentType.includes("application/json")
+                        ) {
+                            const data = await res.json();
+                            document.getElementById("result").textContent =
+                                JSON.stringify(data, null, 2);
+                        } else {
+                            const text = await res.text();
+                            document.getElementById("result").textContent =
+                                "Bukan JSON:\n" + text;
+                        }
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        document.getElementById("result").textContent =
+                            "Fetch error: " + err;
+                    });
+            }
+        </script>
+    </body>
+</html>
